@@ -2,7 +2,6 @@ use mach::port::{mach_port_t, MACH_PORT_NULL};
 use mach::kern_return::{kern_return_t, KERN_SUCCESS};
 use mach::traps::{mach_task_self, task_for_pid};
 use libproc::{processes};
-use libproc::proc_pid::ProcType;
 use libproc::processes::ProcFilter;
 
 pub struct Process {
@@ -17,7 +16,7 @@ pub enum ProcessErr {
     Other(kern_return_t),    // something else
 }
 impl ProcessErr {
-    fn from_kern(kr: kern_return_t) -> Self {
+    pub fn from_kern(kr: kern_return_t) -> Self {
         match kr {
             5 => ProcessErr::PermissionDenied,
             4 => ProcessErr::NoSuchProcess,
