@@ -1,6 +1,6 @@
 [package]
 name = "osxmem"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 description = "A macOS library for reading and writing process memory using the Mach kernel APIs."
 license = "MIT"
@@ -12,6 +12,6 @@ categories = ["os::macos-apis", "development-tools::debugging"]
 [package.metadata.docs.rs]
 targets = ["x86_64-apple-darwin"]
 
-[dependencies]
+[target.'cfg(target_os = "macos")'.dependencies]
 libproc = "0.14.11"
 mach = "0.3.2"

@@ -1,3 +1,4 @@
+#![cfg(target_os = "macos")]
 //! # osxmem
 //!
 //! A macOS library for reading and writing process memory using the Mach kernel APIs.
