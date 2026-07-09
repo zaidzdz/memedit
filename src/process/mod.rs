@@ -3,18 +3,19 @@ use mach::kern_return::{kern_return_t, KERN_SUCCESS};
 use mach::traps::{mach_task_self, task_for_pid};
 use libproc::{processes};
 use libproc::processes::ProcFilter;
-
+/// A handle to an open process.
 pub struct Process {
     pub pid: u32,
     pub port: mach_port_t,
 }
 #[derive(Debug)]
+/// Errors that can occur when opening or interacting with a process.
 pub enum ProcessErr {
     ListFailed(String),
     KernError(String),
 }
 impl ProcessErr {
-    pub fn from_kern(kr: kern_return_t) -> Self {
+    pub(crate) fn from_kern(kr: kern_return_t) -> Self {
         unsafe extern "C" { fn mach_error_string(err: kern_return_t) -> *const std::ffi::c_char;} //import c library for mach_error_string function
 
         let msg = unsafe { std::ffi::CStr::from_ptr(mach_error_string(kr)) }
@@ -24,6 +25,7 @@ impl ProcessErr {
     }
 }
 impl Process {
+    /// Opens a process by PID.
     pub fn open(pid: u32) -> Result<Process, ProcessErr> {
         let mut port:mach_port_t = MACH_PORT_NULL; //0
         let kern_ret:kern_return_t = unsafe {task_for_pid(mach_task_self(), pid as i32, &mut port)};
@@ -34,6 +36,7 @@ impl Process {
             Ok(Process{pid, port})
         }
     }
+    /// Opens a process by name.
     pub fn open_by_name(name: &str) -> Result<Process, ProcessErr> {
         let pids: Vec<u32> = processes::pids_by_type(ProcFilter::All).map_err(|e| ProcessErr::ListFailed(e.to_string()))?;
 
