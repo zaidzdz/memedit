@@ -9,7 +9,7 @@ Read and write process memory on macOS using the Mach kernel APIs.
 ## Requirements
 
 - macOS only
-- Must be run with root
+- Must be ran with root
 
 ## Usage
 
