@@ -1,9 +1,10 @@
-use mach::vm::mach_vm_write;
+use mach::vm::{mach_vm_write};
 use mach::kern_return::{kern_return_t, KERN_SUCCESS};
 use crate::process::{Process, ProcessErr};
 
-pub fn write_mem<T: Copy>(process: &Process, address: usize, value:T) -> Result<(), ProcessErr> {
-    let kern_ret:kern_return_t = unsafe {
+pub fn write_mem<T: Copy>(process: &Process, address: usize, value: T) -> Result<(), ProcessErr> {
+
+    let kern_ret: kern_return_t = unsafe {
         mach_vm_write(
             process.port,
             address as u64,
@@ -14,5 +15,6 @@ pub fn write_mem<T: Copy>(process: &Process, address: usize, value:T) -> Result<
     if kern_ret != KERN_SUCCESS {
         return Err(ProcessErr::from_kern(kern_ret));
     }
-    return Ok(());
+
+    Ok(())
 }

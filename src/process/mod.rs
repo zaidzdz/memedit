@@ -10,18 +10,17 @@ pub struct Process {
 }
 #[derive(Debug)]
 pub enum ProcessErr {
-    PermissionDenied,        // KERN_FAILURE 5
-    NoSuchProcess,           // KERN_INVALID_ARGUMENT 4
     ListFailed(String),
-    Other(kern_return_t),    // something else
+    KernError(String),
 }
 impl ProcessErr {
     pub fn from_kern(kr: kern_return_t) -> Self {
-        match kr {
-            5 => ProcessErr::PermissionDenied,
-            4 => ProcessErr::NoSuchProcess,
-            other => ProcessErr::Other(other),
-        }
+        unsafe extern "C" { fn mach_error_string(err: kern_return_t) -> *const std::ffi::c_char;} //import c library for mach_error_string function
+
+        let msg = unsafe { std::ffi::CStr::from_ptr(mach_error_string(kr)) }
+            .to_string_lossy()
+            .to_string();
+        ProcessErr::KernError(msg)
     }
 }
 impl Process {
@@ -40,7 +39,7 @@ impl Process {
 
         let pid = pids.iter()
             .find(|pid| libproc::proc_pid::name(**pid as i32).ok().as_deref() == Some(name))
-            .ok_or(ProcessErr::NoSuchProcess)?;
+            .ok_or(ProcessErr::KernError("no such process".to_string()))?;
 
         Process::open(*pid)
     }
