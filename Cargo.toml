@@ -1,10 +1,10 @@
 [package]
-name = "memedit"
+name = "osxmem"
 version = "0.1.0"
 edition = "2024"
 description = "A macOS library for reading and writing process memory using the Mach kernel APIs."
 license = "MIT"
-repository = "https://github.com/zaidzdz/memedit"
+repository = "https://github.com/zaidzdz/osxmem"
 keywords = ["memory", "mach", "macos", "process"]
 categories = ["os::macos-apis", "development-tools::debugging"]
 

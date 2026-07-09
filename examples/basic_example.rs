@@ -1,5 +1,5 @@
-use memedit::process::Process;
-use memedit::memory::{read_mem,write_mem};
+use osxmem::process::Process;
+use osxmem::memory::{read_mem,write_mem};
 fn main() {
     let health_address: usize =  0x7060E5800;
     // Attach to process with name "Game"
